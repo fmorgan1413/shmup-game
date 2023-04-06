@@ -7,6 +7,7 @@ class Enemy{
   float h;
   boolean hit = false;
   int lane;
+  
   //images made in paint 3d
   PImage alien;
   PImage brokenAlien;
@@ -48,6 +49,7 @@ class Enemy{
       float distance = dist(bllet.bulletX, bllet.bulletY, x, y);
       if(distance < bllet.bulletSize/2 + w/2 && distance < bllet.bulletSize/2 + h/2){
         hit = true;
+        dyingAlien.play();
         drawBreakingEnemy();
         bllet.bulletX = 1000;
         x = 10000;
@@ -58,6 +60,7 @@ class Enemy{
   
   void crossTerritory(){
     if(y<401 && y>399 && x<601){
+      dying.play();
       lives--;
     }
   }

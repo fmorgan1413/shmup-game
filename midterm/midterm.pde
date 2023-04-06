@@ -1,3 +1,10 @@
+import processing.sound.*;
+SoundFile fire;
+SoundFile dyingAlien;
+SoundFile dying;
+
+PFont font;
+
 Cannon player;
 Enemy[] aliens = new Enemy[3];
 ArrayList bullets;
@@ -21,6 +28,10 @@ void setup(){
     aliens[i].setupAliens(x, 0, random(1,3));
   }
   
+  font = createFont("Take Coffee.ttf",18);
+  fire = new SoundFile(this,"448226__inspectorj__explosion-8-bit-01.wav");
+  dyingAlien = new SoundFile(this, "537021__fivebrosstopmosyt__alien-grunt-1.wav");
+  dying = new SoundFile(this, "648969__atomediadesign__dying.wav");
   background = loadImage("midterm background.png");
   gameover = loadImage("midterm game over screen.png");
   state = "title";
@@ -57,8 +68,12 @@ void keyPressed(){
       }
     }
   }
-  if(key == ' '){
-    player.shooting();
+  if(state == "game")
+  {
+    if(key == ' '){
+      player.shooting();
+      fire.play();
+    }
   }
   if(key == 's' && state == "title"){
     state = "game";
@@ -67,6 +82,7 @@ void keyPressed(){
     lives = 3;
     timer = 0;
     for(int i=0; i<aliens.length; i++){
+      
       aliens[i] = new Enemy();
       float x = random(0,width);
       aliens[i].setupAliens(x, 0, random(1,3));
@@ -91,8 +107,9 @@ void drawGame(){
   line(0,400,600,400);
   stroke(0);
   textSize(30);
+  textFont(font);
   fill(255);
-  text("survival time: " +timer, 20, 40);
+  text("survival time: " + timer/5 + "." +timer%5, 20, 40);
   text("lives: " +lives, 20, 80);
 
   
@@ -104,20 +121,22 @@ void drawGame(){
     aliens[i].checkCollision();
     aliens[i].crossTerritory();
   }
+   
   if(lives == 0){
     state = "game over";
   }
 }
 
 void title(){
+  textFont(font);
   textSize(50);
-  text("ALIEN SHOOTER",120,150);
+  text("ALIEN SHOOTER",75,150);
   textSize(20);
-  text("OBJECTIVE: keep the aliens from landing on earth", 75, 250);
+  text("OBJECTIVE: keep the aliens from landing on earth", 45, 250);
   textSize(15);
-  text("press s to get in the field", 220, 340);
-  text("use the left and right arrow keys to move your tank",140, 380);
-  text("press space to shoot", 235, 420);
+  text("press s to get in the field", 200, 340);
+  text("use the left and right arrow keys to move your tank",110, 380);
+  text("press space to shoot", 205, 420);
 }
 
 void gameover(){
@@ -125,6 +144,6 @@ void gameover(){
   textSize(30);
   text("GAME OVER", width/2, 280);
   textSize(15);
-  text("you survived for: "+timer+" secs",width/2,310);
+  text("you survived for: "+ timer/5 + "." +timer%5+" secs",width/2,310);
   text("press s to get back in the field", width/2, 330);
 }
